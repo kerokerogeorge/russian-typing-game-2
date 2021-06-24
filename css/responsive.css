@@ -1,0 +1,119 @@
+@media screen and (max-width: 767px) {
+    #post-title {
+      font-size:24px;
+      width:300px;
+      border-bottom: solid 2px black;
+    }
+
+    .game-title {
+      font-size:15px;
+      padding-top: 10px;
+      color:#fff;
+    }
+
+    #how-to-play {
+      font-size:23px;
+    }
+
+    #copy-right{
+      font-size:11px;
+    }
+    /*画面サイズ 767pxまで適用*/
+    #starting_button {
+      font-size: 28px;
+    }
+
+    #target {
+      font-size: 28px;
+    }
+
+    .keyboard {
+      line-height: 1;
+    }
+    .key{
+      margin: 1px;
+    }
+
+    .second-row {
+      margin-left: 21px;
+    }
+    .south-east {
+      color: white;
+      font-size: 7px;
+      margin-left: 10px;
+      margin-top: 1px;
+    }
+
+    .north-west{
+      font-size: 10px;
+      margin-right: 19px;
+      margin-top: 1px;
+    }
+
+    #new-words, #missed-words, #arrived-word, .game-title{
+      font-size:13px;
+    }
+
+    .remaining-time{
+      margin-left:70px;
+      font-size: 10px;
+    }
+    .card-left {
+      margin-top:60px;
+      margin-bottom:15px;
+      height:140px;
+      width:200px;
+    }
+
+    .card-left-o {
+      margin-top:60px;
+      margin-bottom:15px;
+      height:84px;
+      width:200px;
+    }
+
+    .description-card{
+      line-height: 30px;
+      margin:0px 35px;
+    }
+    .description-card{
+      font-size:14px;
+    }
+
+    .card-sq {
+      height:150px;
+      width:150px;
+    }
+
+    .last {
+      margin-top: 50px;
+      text-align: center;
+    }
+
+    .only-des {
+      text-align: start;
+    }
+
+    .sns-block{
+      margin-top:60px;
+    }
+  }
+  @media screen and (min-width: 768px) and (max-width: 991px) {
+    /*画面サイズ 768pxから991pxまで適用*/
+    /*.south-east {color: red;}*/
+    .keyboard {
+      margin: 0;
+    }
+    .remaining-time{
+      margin-left:70px;
+      font-size: 10px;
+    }
+  }
+  @media screen and (min-width: 992px) and (max-width: 1199px) {
+    /*画面サイズ 992pxから1199pxまで適用*/
+    /*.south-east {color: green;}*/
+  }
+  @media screen and (min-width:1200px) {
+    /*画面サイズ 1200px以上から適用*/
+    /*.south-east {color: blue;}*/
+  }

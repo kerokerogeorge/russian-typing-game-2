@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <!-- viewport meta -->
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta property="og:title" content="ロシア語タイピング練習<マスタリング・キリル>" />
+  <meta property="og:type" content="website" />
+  <meta property="og:description" content="「マスタリング・キリル」はロシア語学習者のためのキリル文字（ロシア語）タイピング練習ゲームです。自分にあったレベルを選択してキリル文字のタイピング速度をあげましょう" />
+  <meta property="og:url" content="http://www.mastering-cyrillic.com/" />
+  <meta property="og:site_name" content="マスタリング・キリル" />
+  <meta property="og:image" content="images/og/opg.png" />
+  <!-- Bootstrap CSS -->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+  <link rel="stylesheet" type="text/css" href="css/main.css">
+  <link rel="stylesheet" type="text/css" href="css/hamburger.css">
+  <link rel="stylesheet" type="text/css" href="css/keyboard.css">
+  <link rel="stylesheet" type="text/css" href="css/table.css">
+  <link rel="stylesheet" type="text/css" href="css/responsive.css">
+  <link rel="stylesheet" type="text/css" href="css/responsive-hamburger.css">
+
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-131076662-1"> </script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'UA-131076662-1');
+  </script>
+  <title>Typing Game for Russian</title>
+</head>
+<body>
+  <div class="header-nav" style="margin:0;">
+    <div class="level-title">【レベル1】~6文字</div>
+    <div id="time-css">制限時間 : <span id="timer"></span></div>
+      <nav class="global_nav">
+        <ul>
+          <li class="nav_li"><a href="index.html" class="nav_a">ホーム</a></li>
+          <li class="nav_li"><a href="one_word.html" class="nav_a">1文字（ALL）</a></li>
+          <li class="nav_li"><a href="one_word_u.html" class="nav_a">1文字（１列目）</a></li>
+          <li class="nav_li"><a href="one_word_m.html" class="nav_a">1文字（２列目）</a></li>
+          <li class="nav_li"><a href="one_word_d.html" class="nav_a">1文字（３列目）</a></li>
+          <li class="nav_li"><a href="level_one.html" class="nav_a">【レベル1】~6文字</a></li>
+          <li class="nav_li"><a href="level_two.html" class="nav_a">【レベル2】7~9文字</a></li>
+          <li class="nav_li"><a href="level_three.html" class="nav_a">【レベル3】10文字以上</a></li>
+<!--           <li class="nav_li"><a href="coming_soon.html" class="nav_a">文章タイピング1</a></li>
+          <li class="nav_li"><a href="coming_soon.html" class="nav_a">文章タイピング2</a></li> -->
+          <li class="nav_li"><a href="mailto:master.cyrillic.typing@gmail.com">お問い合わせ</a></li>
+        </ul>
+      </nav>
+    <div class="toggle">
+      <span></span>
+      <span></span>
+      <span></span>
+      <span>menu</span>
+    </div>
+  </div>
+  <!-- <div class="container"> -->
+    <div class="row">
+      <div class="col-lg-3"></div>
+      <div class="col-lg-6 col-xs-12">
+        <div class="keyboard-box">
+        <p><span id="target"></span></p>
+        <input type="button" class="square_btn" value="キーボードを非表示にする" onclick="showAndHide(this);" />
+        <div id="keyboard_hint" class="keyboard">
+          <div class="key-row">
+            <div class="key"><div class="north-west">й</div><div class="south-east">q</div></div>
+            <div class="key"><div class="north-west">ц</div><div class="south-east">w</div></div>
+            <div class="key"><div class="north-west">у</div><div class="south-east">e</div></div>
+            <div class="key"><div class="north-west">к</div><div class="south-east">r</div></div>
+            <div class="key"><div class="north-west">е</div><div class="south-east">t</div></div>
+            <div class="key"><div class="north-west">н</div><div class="south-east">y</div></div>
+            <div class="key"><div class="north-west">г</div><div class="south-east">u</div></div>
+            <div class="key"><div class="north-west">ш</div><div class="south-east">i</div></div>
+            <div class="key"><div class="north-west">щ</div><div class="south-east">o</div></div>
+            <div class="key"><div class="north-west">з</div><div class="south-east">p</div></div>
+            <div class="key"><div class="north-west">х</div><div class="south-east">@</div></div>
+            <div class="key"><div class="north-west">ъ</div><div class="south-east">[</div></div>
+          </div><br>
+          <div class="key-row second-row">
+            <div class="key"><div class="north-west">ф</div><div class="south-east">a</div></div>
+            <div class="key"><div class="north-west">ы</div><div class="south-east">s</div></div>
+            <div class="key"><div class="north-west">в</div><div class="south-east">d</div></div>
+            <div class="key"><div class="north-west">а</div><div class="south-east">f</div></div>
+            <div class="key"><div class="north-west">п</div><div class="south-east">g</div></div>
+            <div class="key"><div class="north-west">р</div><div class="south-east">h</div></div>
+            <div class="key"><div class="north-west">о</div><div class="south-east">j</div></div>
+            <div class="key"><div class="north-west">л</div><div class="south-east">k</div></div>
+            <div class="key"><div class="north-west">д</div><div class="south-east">l</div></div>
+            <div class="key"><div class="north-west">ж</div><div class="south-east">;</div></div>
+            <div class="key"><div class="north-west">э</div><div class="south-east">:</div></div>
+            <div class="key"><div class="north-west">ё</div><div class="south-east">]</div></div>
+          </div><br>
+          <div class="key-row third-row">
+            <div class="key"><div class="north-west">я</div><div class="south-east">z</div></div>
+            <div class="key"><div class="north-west">ч</div><div class="south-east">x</div></div>
+            <div class="key"><div class="north-west">с</div><div class="south-east">c</div></div>
+            <div class="key"><div class="north-west">м</div><div class="south-east">v</div></div>
+            <div class="key"><div class="north-west">и</div><div class="south-east">b</div></div>
+            <div class="key"><div class="north-west">т</div><div class="south-east">n</div></div>
+            <div class="key"><div class="north-west">ь</div><div class="south-east">m</div></div>
+            <div class="key"><div class="north-west">б</div><div class="south-east">,</div></div>
+            <div class="key"><div class="north-west">ю</div><div class="south-east">.</div></div>
+            <div class="key"><div class="north-west">/</div><div class="south-east">/</div></div>
+          </div><br>
+          <div class="key-row forth-row">
+            <div class="key spacekey key_space"> <p>space</p></div>
+          </div><br>
+        </div>
+        </div>
+      </div>
+      <div class="col-lg-3">
+        <table id="arrived-words">
+          <tbody>
+            <tr>
+              <td>番号</td>
+              <td>単語履歴</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="col-lg-3">
+        <div class="data-box">
+          <p>単語の数・・・<span id="words"></span></p>
+          <p>正しく打ったキーの数・・・<span id="score"></span></p>
+          <p>ミスタイプ・・・<span id="miss"></span></p>
+          <p>正解率・・・<span id="accuracy"></span></p>
+        </div>
+      </div>
+      <div class="col-lg-6">
+          <p style="font-family: serif;"> [ 新出単語 ]</p>
+          <table id="new-words-box" >
+            <tbody>
+              <tr>
+                <td width="10%">番号</td>
+                <td width="30%">ロシア語</td>
+                <td width="20%">日本語</td>
+                <td width="40%">備考</td>
+              </tr>
+            </tbody>
+          </table>
+      </div>
+      <div class="col-lg-3">
+        <table id="missed-words">
+          <tbody>
+            <tr>
+              <td>打ち間違えた単語</td>
+              <td>間違えた回数</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  <!-- </div> -->
+  <script type="text/javascript">
+
+  function showAndHide(obj){
+    if (document.getElementById("keyboard_hint").style.display != "none") {
+      obj.value="キーボードを表示する";
+      $("#keyboard_hint").hide("slow");
+    }else{
+      obj.value="キーボードを非表示にする";
+      $("#keyboard_hint").show("slow");
+    }
+  }
+</script>
+  <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+  <script type="text/javascript" src="js/level_one.js"></script>
+  <script type="text/javascript" src="js/main.js"></script>
+  <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+  <!-- jQuery、Popper.js、Bootstrap JS -->
+  <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+</body>
+</html>

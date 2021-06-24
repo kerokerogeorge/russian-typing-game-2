@@ -1,0 +1,242 @@
+body {
+    /*padding-top: 40px;*/
+    background: #EFEBEB;
+    /*background: #fff;*/
+    /*font-family: "Gill Sans", sans-serif;*/
+    font-family: "Century", mso-ansi-language:RU;
+    text-align: center;
+    margin:0;
+  }
+  
+  a {
+    text-decoration: none;
+  }
+  
+  #post-title {
+  border-bottom: solid 3px black;
+  margin-top:100px;
+  font-family: serif;
+  }
+  
+  #target {
+    font-size: 48px;
+    letter-spacing: 3px;
+    margin-top: 30px;
+  }
+  
+  .info  {
+    color: #323232;
+  }
+  
+  .correct {
+    color: red;
+  }
+  
+  .header-nav{
+    height:65px;
+    width:100%;
+    background:#323232;
+    position: fixed; /* bodyに対しての絶対位置指定 */
+    z-index: 50;
+    box-shadow: 0 2px 2px 0 rgba(0,0,0,.50);/*影*/
+  }
+  
+  .remaining-time {
+    padding-top:40px;
+    font-size: 20px;
+    width: 30%;
+    color:#fff;
+  }
+  
+  .swal-overlay {
+    background-color: rgba(64, 62, 94, 0.45);
+  }
+  
+  .swal-title {
+    margin: 0px;
+    box-shadow: 0px 1px 1px rgba(0, 0, 0, 0.21);
+    margin-bottom: 28px;
+  }
+  
+  .swal-text {
+    background-color: rgba(64, 62, 94, 0.22);
+    padding: 17px;
+    border: 1px solid #C1CAF7;
+    display: block;
+    margin: 22px;
+    text-align: start;
+    color: #323232;
+  }
+  
+  .level-title {
+    padding-top: 10px;
+    color:#fff;
+  }
+  
+  #time-css{
+    color:#fff;
+    padding-bottom:10px;
+  }
+  
+  .game-title {
+    font-size:20px;
+    padding-top: 10px;
+    color:#fff;
+  }
+  
+  .footer-nav {
+    background: #323232;
+    bottom: 0px;
+    height:100px;
+    width:100%;
+    margin-top:60px;
+  }
+  
+  #copy-right {
+    font-size: 15px;
+    color:#fff;
+    padding-top:70px;
+  }
+  
+  .sns-block {
+    margin:5px 5px;
+  }
+  
+  /*----------toggleボタン--------------------------------*/
+  .button-other {
+    cursor: pointer;
+    display: inline-block;
+    width: 60px;/*幅*/
+    height: 60px;/*高さ*/
+    text-align: center;
+    padding: 15px 1px;
+    text-decoration: none;
+    color: #0A6ACF;
+    border: solid 2px #0A6ACF;
+    border-radius: 50%;
+    transition: .4s;
+    box-shadow: 0 2px 2px 0 rgba(0,0,0,.12), 0 2px 2px 0 rgba(0,0,0,.24);/*影*/
+  }
+  
+  .button-other:hover {
+    background: #0A6ACF;
+    color: white;
+    box-shadow: 0 4px 5px 0 rgba(0,0,0,.14), 0 1px 10px 0 rgba(0,0,0,.12), 0 2px 4px -1px rgba(0,0,0,.2);
+  }
+  
+  .snsbtn {
+    margin-top: 0px;
+  }
+  
+  /*-------------------snsボタン------------------------*/
+  /*twitter*/
+  .fl_tw2{/*ボタンの背景*/
+    color: #FFF;/*文字・アイコン色*/
+    border-radius: 7px;/*角丸に*/
+    display: inline-block;
+    height: 50px;/*高さ*/
+    width: 50px;/*幅*/
+    text-align: center;/*中身を中央寄せ*/
+    font-size: 20px;/*文字のサイズ*/
+    line-height: 60px;/*高さと合わせる*/
+    vertical-align: middle;/*垂直中央寄せ*/
+    background: #1da1f3;
+    overflow: hidden;/*はみ出た部分を隠す*/
+    text-decoration:none;/*下線は消す*/
+  }
+  
+  .fl_tw2 .fa-twitter {
+      text-shadow: 2px 2px 0px #4287d6;
+      font-size: 30px;
+  }
+  
+  .fl_tw2 span {/*テキスト*/
+    display:inline-block;
+    transition: .5s}
+  
+  .fl_tw2:hover span{/*ホバーで一周回転*/
+    -webkit-transform: rotateX(360deg);
+    -ms-transform: rotateX(360deg);
+    transform: rotateX(360deg);
+  }
+  
+  /*facebook*/
+  
+  .fl_fb2 {/*ボタンの下地*/
+    color: #FFF;/*文字・アイコン色*/
+    border-radius: 7px;/*角丸に*/
+    padding-left: 15px;
+    display: inline-block;
+    height: 50px;/*高さ*/
+    width: 50px;/*幅*/
+    text-align: center;/*中身を中央寄せ*/
+    font-size: 40px;/*文字のサイズ*/
+    line-height: 70px;/*高さと合わせる*/
+    vertical-align: middle;/*垂直中央寄せ*/
+    background: #4966a0;
+    overflow: hidden;/*はみ出た部分を隠す*/
+    text-decoration:none;/*下線は消す*/
+  }
+  
+  .fl_fb2 .fa-facebook {
+      text-shadow: 2px 2px 1px #224282;
+      font-size: 50px;
+  }
+  
+  .fl_fb2 span {/*テキスト*/
+    display:inline-block;
+    transition: .5s;
+  }
+  
+  .fl_fb2:hover span{/*ホバーで一周回転*/
+    -webkit-transform: rotateX(360deg);
+    -ms-transform: rotateX(360deg);
+    transform: rotateX(360deg);
+  }
+  
+  /*instagram*/
+  
+  .fl_inst2{/*ボタンの下地*/
+    color: #FFF;/*文字・アイコン色*/
+    border-radius: 7px;/*角丸に*/
+    position: relative;
+    display: inline-block;
+    height: 50px;/*高さ*/
+    width: 50px;/*幅*/
+    text-align: center;/*中身を中央寄せ*/
+    font-size: 25px;/*文字のサイズ*/
+    line-height: 55px;/*高さと合わせる*/
+    vertical-align: middle;/*垂直中央寄せ*/
+    background: -webkit-linear-gradient(135deg, #427eff 0%, #f13f79 70%) no-repeat;
+    background: linear-gradient(135deg, #427eff 0%, #f13f79 70%) no-repeat;/*グラデーション①*/
+    overflow: hidden;/*はみ出た部分を隠す*/
+    text-decoration:none;/*下線は消す*/
+  }
+  
+  .fl_inst2:before{/*グラデーション②*/
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;/*全体を覆う*/
+    height: 100%;/*全体を覆う*/
+    background: -webkit-linear-gradient(15deg, #ffdb2c, rgb(249, 118, 76) 25%, rgba(255, 77, 64, 0) 50%) no-repeat;
+    background: linear-gradient(15deg, #ffdb2c, rgb(249, 118, 76) 25%, rgba(255, 77, 64, 0) 50%) no-repeat;
+  }
+  
+  .fl_inst2 .fa-instagram{/*アイコン*/
+    font-size: 35px;/*アイコンサイズ*/
+    position: relative;
+    top: 4px;/*アイコン位置の微調整*/
+  }
+  
+  .fl_inst2 span {/*テキスト*/
+    display:inline-block;
+    position: relative;
+    transition: .5s}
+  
+  .fl_inst2:hover span{/*ホバーで一周回転*/
+    -webkit-transform: rotateX(360deg);
+    -ms-transform: rotateX(360deg);
+    transform: rotateX(360deg);
+  }
