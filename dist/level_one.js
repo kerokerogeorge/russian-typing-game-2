@@ -5,52 +5,62 @@ var letter = [
     { code: 'KeyF', keyRus: 'а' },
     { code: 'KeyG', keyRus: 'п' },
 ];
-function Debug() {
-    return console.log("function called");
-}
-// 入力されたアルファベットに対応するキリル文字をreturnする
-var returnCorrespondentLetter = function (pressedCode) {
-    var letterInfo = letter.filter(function (e) { return e.code == pressedCode.code; });
-    return letterInfo[0].keyRus;
-};
-// 入力された瞬間にキーのコードを受け取る
-window.addEventListener('keydown', function (pressedCode) {
-    returnCorrespondentLetter(pressedCode);
-    // console.log("key:" + pressedCode.key);
-    // console.log("code:" + pressedCode.code);
-    // console.log("keyCode:" + pressedCode.keyCode);
-    // var pressing_key = e.key;
-    // var where_pressing_key = alpha.indexOf(pressing_key);
-    // var pressing_kiriru_number = keys_array.indexOf(kiriru[where_pressing_key])
-    // keyboards[pressing_kiriru_number].classList.add("pushed")
-});
-var PressedMotion = /** @class */ (function () {
-    function PressedMotion() {
+var Keylist = /** @class */ (function () {
+    function Keylist() {
         this.topElement = document.getElementById('keyboard');
         this.keyElement = this.topElement.querySelectorAll('.key');
-        this.recievePushedKey();
     }
-    PressedMotion.prototype.recievePushedKey = function () {
+    // キリル文字と英字キーをそれぞれ配列に変換
+    Keylist.prototype.RuskeysToArray = function () {
         var arrRusKey = [];
-        var arrEngKey = [];
         this.keyElement.forEach(function (e) {
             var oneRusKey = e.textContent.split('')[0];
-            var oneEngKey = e.textContent.split('')[1];
             // キリル文字を配列にして取得
             arrRusKey.push(oneRusKey);
+        });
+        return arrRusKey;
+    };
+    Keylist.prototype.EngkeysToArray = function () {
+        var arrEngKey = [];
+        this.keyElement.forEach(function (e) {
+            var oneEngKey = e.textContent.split('')[1];
             // 英文字を配列にして取得
             arrEngKey.push(oneEngKey);
         });
-        console.log(arrEngKey);
-        console.log(arrRusKey);
+        return arrEngKey;
     };
-    return PressedMotion;
+    return Keylist;
 }());
-var DebugClass = /** @class */ (function () {
-    function DebugClass() {
-        console.log("class called");
+var keyList = new Keylist();
+var RusKeyArray = keyList.RuskeysToArray();
+var EngKeyArray = keyList.EngkeysToArray();
+// 入力されたアルファベットに対応するキリル文字をreturnする
+function returnCorrespondentLetter(pressedCode) {
+    var letterInfo = letter.filter(function (e) { return e.code == pressedCode.code; });
+    return letterInfo[0].keyRus;
+}
+function pushedMotion(pressedKey, eventType) {
+    var keyboardClass = document.getElementsByClassName('key');
+    var indexOfRusKey = RusKeyArray.indexOf(pressedKey);
+    if (eventType === 1) {
+        keyboardClass[indexOfRusKey].classList.add("pushed");
+        console.log("add");
     }
-    return DebugClass;
-}());
-var debug = new DebugClass();
-var pressedMotion = new PressedMotion();
+    if (eventType === 2) {
+        keyboardClass[indexOfRusKey].classList.remove("pushed");
+        console.log("remove");
+    }
+}
+window.addEventListener('keydown', function (pressedCode) {
+    pushedMotion(returnCorrespondentLetter(pressedCode), 1);
+});
+window.addEventListener('keyup', function (pressedCode) {
+    pushedMotion(returnCorrespondentLetter(pressedCode), 2);
+});
+// メモ
+// １キーボードの配列を取得✅ キリル文字の配列
+// ２押されたキリル文字取✅ キリル文字の一文字
+// ３key classを全て取得✅ class要素
+// ４押されたキリル文字がキーボード配列の何番目かを要素に格納
+// ５4で取得した番号をもとに何番目のkeyクラスを変更すればいいかを指定
+// key down ⇒ key up
