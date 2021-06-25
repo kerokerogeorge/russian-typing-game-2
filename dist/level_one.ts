@@ -48,7 +48,7 @@ class Keylist {
     }
 
     // キリル文字と英字キーをそれぞれ配列に変換
-    RuskeysToArray(){
+    RuskeysToArray(): string[]{
         let arrRusKey: string[] = [];
         this.keyElement.forEach(function (e) {
             let oneRusKey = e.textContent.split('')[0]
@@ -58,7 +58,7 @@ class Keylist {
         return arrRusKey
     }
 
-    EngkeysToArray(){
+    EngkeysToArray(): string[]{
         let arrEngKey: string[] = [];
         this.keyElement.forEach(function (e) {
             let oneEngKey = e.textContent.split('')[1]
@@ -73,7 +73,7 @@ let RusKeyArray: string[] = keyList.RuskeysToArray();
 let EngKeyArray: string[] = keyList.EngkeysToArray();
 
 // 入力されたアルファベットに対応するキリル文字をreturnする
-function returnCorrespondentLetter(pressedCode){
+function returnCorrespondentLetter(pressedCode): string{
     let letterInfo = letter.filter(e => e.code == pressedCode.code)
     return letterInfo[0].keyRus
 }
