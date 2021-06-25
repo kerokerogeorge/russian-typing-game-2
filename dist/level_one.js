@@ -1,3 +1,8 @@
+var KeyEvent;
+(function (KeyEvent) {
+    KeyEvent[KeyEvent["KeyDown"] = 0] = "KeyDown";
+    KeyEvent[KeyEvent["KeyUp"] = 1] = "KeyUp";
+})(KeyEvent || (KeyEvent = {}));
 var letter = [
     { code: 'KeyA', keyRus: 'ф' },
     { code: 'KeyS', keyRus: 'ы' },
@@ -42,20 +47,20 @@ function returnCorrespondentLetter(pressedCode) {
 function pushedMotion(pressedKey, eventType) {
     var keyboardClass = document.getElementsByClassName('key');
     var indexOfRusKey = RusKeyArray.indexOf(pressedKey);
-    if (eventType === 1) {
+    if (eventType === KeyEvent.KeyDown) {
         keyboardClass[indexOfRusKey].classList.add("pushed");
         console.log("add");
     }
-    if (eventType === 2) {
+    if (eventType === KeyEvent.KeyUp) {
         keyboardClass[indexOfRusKey].classList.remove("pushed");
         console.log("remove");
     }
 }
 window.addEventListener('keydown', function (pressedCode) {
-    pushedMotion(returnCorrespondentLetter(pressedCode), 1);
+    pushedMotion(returnCorrespondentLetter(pressedCode), KeyEvent.KeyDown);
 });
 window.addEventListener('keyup', function (pressedCode) {
-    pushedMotion(returnCorrespondentLetter(pressedCode), 2);
+    pushedMotion(returnCorrespondentLetter(pressedCode), KeyEvent.KeyUp);
 });
 // メモ
 // １キーボードの配列を取得✅ キリル文字の配列
