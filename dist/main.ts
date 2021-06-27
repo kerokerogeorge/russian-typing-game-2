@@ -41,16 +41,16 @@ const letters: { [key: string]: string }[] = [
 ]
 
 const words: { [key: number]: string[]} = {
-    1: ['автор', '著者、作者', ''],
-    2: ['адрес', '住所、番地', ''],
-    3: ['белый','①白い ②淡色の',''],
-    4: ['давно','①ずっと以前に ②長い間',''],
-    5: ['живот','腹、お腹',''],
-    6: ['камень','石、岩石',''],
-    7: ['шаг','歩調/足音',''],
-    8: ['наука','科学/学問',''],
-    9: ['фирма','会社',''],
-    10: ['начало','はじめ',''],
+    0: ['автор', '著者、作者', ''],
+    1: ['адрес', '住所、番地', ''],
+    2: ['белый','①白い ②淡色の',''],
+    3: ['давно','①ずっと以前に ②長い間',''],
+    4: ['живот','腹、お腹',''],
+    5: ['камень','石、岩石',''],
+    6: ['шаг','歩調/足音',''],
+    7: ['наука','科学/学問',''],
+    8: ['фирма','会社',''],
+    9: ['начало','はじめ',''],
 }
 
 class Keylist {
@@ -66,7 +66,7 @@ class Keylist {
     RuskeysToArray(): string[]{
         let arrRusKey: string[] = [];
         this.keyElement.forEach(function (e) {
-            let oneRusKey = e.textContent.split('')[0]
+            let oneRusKey = e.textContent!.split('')[0]
             // キリル文字を配列にして取得
             arrRusKey.push(oneRusKey);
         });
@@ -76,7 +76,7 @@ class Keylist {
     EngkeysToArray(): string[]{
         let arrEngKey: string[] = [];
         this.keyElement.forEach(function (e) {
-            let oneEngKey = e.textContent.split('')[1]
+            let oneEngKey = e.textContent!.split('')[1]
             // 英文字を配列にして取得
             arrEngKey.push(oneEngKey);
         });
@@ -88,7 +88,7 @@ let RusKeyArray: string[] = keyList.RuskeysToArray();
 let EngKeyArray: string[] = keyList.EngkeysToArray();
 
 // 入力されたアルファベットに対応するキリル文字をreturnする
-function returnCorrespondentLetter(pressedCode): string{
+function returnCorrespondentLetter(pressedCode: KeyboardEvent): string{
     let letterInfo = letters.filter(e => e.code == pressedCode.code)
     return letterInfo[0].keyRus
 }
@@ -106,6 +106,7 @@ function pushedMotion(pressedKey: string, eventType: KeyEvent){
 
 window.addEventListener('keydown', function(pressedCode) {
     pushedMotion(returnCorrespondentLetter(pressedCode), KeyEvent.KeyDown);
+    game.ManageCount(pressedCode);
 })
 
 window.addEventListener('keyup', function(pressedCode) {
@@ -126,19 +127,20 @@ class Game {
     time: number;
     timelabel: HTMLSpanElement;
     targetElement: HTMLDivElement;
+    currentWordLocation: number;
+    settedWord: string;
 
     constructor(){
-        console.log("Game called")
         this.targetElement = document.getElementById('target')! as HTMLDivElement;
         this.timelabel = document.getElementById('timer') as HTMLSpanElement;
-        this.targetElement.innerHTML = "Click here to start";
-        this.time = 10;
+        this.settedWord = "Click here to start";
+        this.targetElement.innerHTML =  this.settedWord;
+        this.time = 60;
         this.status = "NonActive";
-        console.log("1:" +  this.status)
+        this.currentWordLocation = 0;
         this.targetElement.addEventListener('click', () => {
             if(this.status == "NonActive"){
                 this.status = "Active"
-                console.log("2:" +  this.status);
                 this.SetTarget();
                 this.UpdateTimer();
             }
@@ -149,7 +151,6 @@ class Game {
     }
 
     private UpdateTimer(){
-        console.log("UpdateTimer called")
         let timerId = setTimeout(() =>{
             this.time --;
             this.timelabel.innerHTML = `<span>${ this.time }</span>`;
@@ -161,10 +162,37 @@ class Game {
             this.UpdateTimer();
         }, 1000)
     }
-
     private SetTarget(){
-        this.targetElement.innerHTML = words[Math.floor(Math.random() * Object.keys(words).length)][0]
+        this.settedWord = words[Math.floor(Math.random() * Object.keys(words).length)][0];
+        this.targetElement.innerHTML = this.settedWord;
+        this.currentWordLocation = 0;
     }
+
+    ManageCount(pressedcode: KeyboardEvent){
+        if(returnCorrespondentLetter(pressedcode) === this.settedWord[this.currentWordLocation]){
+            console.log("正解です");
+            this.AddCount();
+        }else{
+            console.log("間違えたキーを押しています");
+        }
+        // for(let i = 0 ;  i <= this.settedWord.length; i++){
+        //     if(returnCorrespondentLetter(pressedcode) === this.settedWord[i]){
+        //         this.currentWordLocation ++;
+        //         console.log(this.currentWordLocation);
+        //     } else {
+        //         i --;
+        //     }
+        // }
+    }
+
+    AddCount(){
+        console.log("AddCountが呼び出されました");
+        this.currentWordLocation ++;
+        if(this.currentWordLocation === this.settedWord.length ){
+            this.SetTarget();
+        }
+    }
+
 }
 
 const game = new Game();

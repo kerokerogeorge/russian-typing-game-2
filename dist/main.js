@@ -41,16 +41,16 @@ var letters = [
     { code: 'Space', keyRus: ' ' },
 ];
 var words = {
-    1: ['автор', '著者、作者', ''],
-    2: ['адрес', '住所、番地', ''],
-    3: ['белый', '①白い ②淡色の', ''],
-    4: ['давно', '①ずっと以前に ②長い間', ''],
-    5: ['живот', '腹、お腹', ''],
-    6: ['камень', '石、岩石', ''],
-    7: ['шаг', '歩調/足音', ''],
-    8: ['наука', '科学/学問', ''],
-    9: ['фирма', '会社', ''],
-    10: ['начало', 'はじめ', '']
+    0: ['автор', '著者、作者', ''],
+    1: ['адрес', '住所、番地', ''],
+    2: ['белый', '①白い ②淡色の', ''],
+    3: ['давно', '①ずっと以前に ②長い間', ''],
+    4: ['живот', '腹、お腹', ''],
+    5: ['камень', '石、岩石', ''],
+    6: ['шаг', '歩調/足音', ''],
+    7: ['наука', '科学/学問', ''],
+    8: ['фирма', '会社', ''],
+    9: ['начало', 'はじめ', '']
 };
 var Keylist = /** @class */ (function () {
     function Keylist() {
@@ -98,6 +98,7 @@ function pushedMotion(pressedKey, eventType) {
 }
 window.addEventListener('keydown', function (pressedCode) {
     pushedMotion(returnCorrespondentLetter(pressedCode), KeyEvent.KeyDown);
+    game.ManageCount(pressedCode);
 });
 window.addEventListener('keyup', function (pressedCode) {
     pushedMotion(returnCorrespondentLetter(pressedCode), KeyEvent.KeyUp);
@@ -112,17 +113,16 @@ window.addEventListener('keyup', function (pressedCode) {
 var Game = /** @class */ (function () {
     function Game() {
         var _this = this;
-        console.log("Game called");
         this.targetElement = document.getElementById('target');
         this.timelabel = document.getElementById('timer');
-        this.targetElement.innerHTML = "Click here to start";
-        this.time = 10;
+        this.settedWord = "Click here to start";
+        this.targetElement.innerHTML = this.settedWord;
+        this.time = 60;
         this.status = "NonActive";
-        console.log("1:" + this.status);
+        this.currentWordLocation = 0;
         this.targetElement.addEventListener('click', function () {
             if (_this.status == "NonActive") {
                 _this.status = "Active";
-                console.log("2:" + _this.status);
                 _this.SetTarget();
                 _this.UpdateTimer();
             }
@@ -132,7 +132,6 @@ var Game = /** @class */ (function () {
     }
     Game.prototype.UpdateTimer = function () {
         var _this = this;
-        console.log("UpdateTimer called");
         var timerId = setTimeout(function () {
             _this.time--;
             _this.timelabel.innerHTML = "<span>" + _this.time + "</span>";
@@ -145,8 +144,33 @@ var Game = /** @class */ (function () {
         }, 1000);
     };
     Game.prototype.SetTarget = function () {
-        console.log(Math.floor(Math.random() * Object.keys(words).length));
-        this.targetElement.innerHTML = words[Math.floor(Math.random() * Object.keys(words).length)][0];
+        this.settedWord = words[Math.floor(Math.random() * Object.keys(words).length)][0];
+        this.targetElement.innerHTML = this.settedWord;
+        this.currentWordLocation = 0;
+    };
+    Game.prototype.ManageCount = function (pressedcode) {
+        if (returnCorrespondentLetter(pressedcode) === this.settedWord[this.currentWordLocation]) {
+            console.log("正解です");
+            this.AddCount();
+        }
+        else {
+            console.log("間違えたキーを押しています");
+        }
+        // for(let i = 0 ;  i <= this.settedWord.length; i++){
+        //     if(returnCorrespondentLetter(pressedcode) === this.settedWord[i]){
+        //         this.currentWordLocation ++;
+        //         console.log(this.currentWordLocation);
+        //     } else {
+        //         i --;
+        //     }
+        // }
+    };
+    Game.prototype.AddCount = function () {
+        console.log("AddCountが呼び出されました");
+        this.currentWordLocation++;
+        if (this.currentWordLocation === this.settedWord.length) {
+            this.SetTarget();
+        }
     };
     return Game;
 }());
