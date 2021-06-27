@@ -147,6 +147,7 @@ var Game = /** @class */ (function () {
         this.settedWord = words[Math.floor(Math.random() * Object.keys(words).length)][0];
         this.targetElement.innerHTML = this.settedWord;
         this.currentWordLocation = 0;
+        console.log("次に打つキー；" + this.settedWord[this.currentWordLocation]);
     };
     Game.prototype.ManageCount = function (pressedcode) {
         if (returnCorrespondentLetter(pressedcode) === this.settedWord[this.currentWordLocation]) {
@@ -156,21 +157,19 @@ var Game = /** @class */ (function () {
         else {
             console.log("間違えたキーを押しています");
         }
-        // for(let i = 0 ;  i <= this.settedWord.length; i++){
-        //     if(returnCorrespondentLetter(pressedcode) === this.settedWord[i]){
-        //         this.currentWordLocation ++;
-        //         console.log(this.currentWordLocation);
-        //     } else {
-        //         i --;
-        //     }
-        // }
     };
     Game.prototype.AddCount = function () {
-        console.log("AddCountが呼び出されました");
         this.currentWordLocation++;
+        this.DecorateCorrectWord();
         if (this.currentWordLocation === this.settedWord.length) {
             this.SetTarget();
         }
+    };
+    Game.prototype.DecorateCorrectWord = function () {
+        var decoratedWord = this.settedWord.slice(0, this.currentWordLocation);
+        console.log("decoratedWord 1:" + decoratedWord);
+        console.log("decoratedWord 2:" + this.settedWord.substring(this.currentWordLocation));
+        this.targetElement.innerHTML = "<span class=\"correct\">" + decoratedWord + "</span>" + this.settedWord.substring(this.currentWordLocation);
     };
     return Game;
 }());
