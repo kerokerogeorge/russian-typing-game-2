@@ -139,6 +139,7 @@ class Game {
             if(this.status == "NonActive"){
                 this.status = "Active"
                 console.log("2:" +  this.status);
+                this.SetTarget();
                 this.UpdateTimer();
             }
         }, { once: true })
@@ -147,7 +148,7 @@ class Game {
 
     }
 
-    UpdateTimer(){
+    private UpdateTimer(){
         console.log("UpdateTimer called")
         let timerId = setTimeout(() =>{
             this.time --;
@@ -159,6 +160,10 @@ class Game {
             }
             this.UpdateTimer();
         }, 1000)
+    }
+
+    private SetTarget(){
+        this.targetElement.innerHTML = words[Math.floor(Math.random() * Object.keys(words).length)][0]
     }
 }
 

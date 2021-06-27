@@ -123,6 +123,7 @@ var Game = /** @class */ (function () {
             if (_this.status == "NonActive") {
                 _this.status = "Active";
                 console.log("2:" + _this.status);
+                _this.SetTarget();
                 _this.UpdateTimer();
             }
         }, { once: true });
@@ -142,6 +143,10 @@ var Game = /** @class */ (function () {
             }
             _this.UpdateTimer();
         }, 1000);
+    };
+    Game.prototype.SetTarget = function () {
+        console.log(Math.floor(Math.random() * Object.keys(words).length));
+        this.targetElement.innerHTML = words[Math.floor(Math.random() * Object.keys(words).length)][0];
     };
     return Game;
 }());
