@@ -1,4 +1,6 @@
 enum KeyEvent { KeyDown, KeyUp }
+type Status = "Active" | "NonActive";
+
 
 const letters: { [key: string]: string }[] = [
     { code: 'KeyQ', keyRus: 'й' },
@@ -118,3 +120,67 @@ window.addEventListener('keyup', function(pressedCode) {
 // ５4で取得した番号をもとに何番目のkeyクラスを変更すればいいかを指定
 
 // key down ⇒ key up
+
+class Game {
+    status: Status;
+    time: number;
+    timelabel: HTMLSpanElement;
+    targetElement: HTMLDivElement;
+
+    constructor(){
+        console.log("Game called")
+        this.targetElement = document.getElementById('target')! as HTMLDivElement;
+        this.timelabel = document.getElementById('timer') as HTMLSpanElement;
+        this.targetElement.innerHTML = "Click here to start";
+        this.time = 10;
+        this.status = "NonActive";
+        console.log("1:" +  this.status)
+        this.targetElement.addEventListener('click', () => {
+            if(this.status == "NonActive"){
+                this.status = "Active"
+                console.log("2:" +  this.status);
+                this.UpdateTimer();
+            }
+        }, { once: true })
+        this.timelabel.innerHTML = `<span>${ this.time }</span>`;
+        this.status = "NonActive";
+
+    }
+
+    UpdateTimer(){
+        console.log("UpdateTimer called")
+        let timerId = setTimeout(() =>{
+            this.time --;
+            this.timelabel.innerHTML = `<span>${ this.time }</span>`;
+            if (this.time <= 0) {
+                clearTimeout();
+                new Game();
+                return;
+            }
+            this.UpdateTimer();
+        }, 1000)
+    }
+}
+
+const game = new Game();
+
+
+// spaceキーを押したらゲームがスタートする
+// timeoutになったら終了
+// 「もう一度遊ぶ」を押したらまたプロジェクトが初期化されて新しいゲームが始まる
+
+// 初期化状態
+// 時間は６０秒にセット
+// press startをクリックされた瞬間に単語がランダムに表示される
+// press startをクリックした瞬間タイマーがスタートする
+
+// 単語を表示する
+// 入力した文字の色が変わる（ccss classの追加）
+// 次の単語が変わる
+
+// projectを最後まで遊んだ回数が１以上なら表示される文字を変更する
+
+// 非アクティブ の状態でクリックイベントが発生したらゲームがスタート
+// 状態がアクティブの状態でクリックイベントが発生してもゲームの初期化は行われない
+
+// タイマーを表示する際にシステムで数値変換をおこにい、加工した値を表示させる
