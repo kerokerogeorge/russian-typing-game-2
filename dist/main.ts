@@ -83,9 +83,10 @@ class Keylist {
         return arrEngKey
     }
 }
-let keyList = new Keylist();
+const keyList = new Keylist();
 let RusKeyArray: string[] = keyList.RuskeysToArray();
 let EngKeyArray: string[] = keyList.EngkeysToArray();
+
 
 // 入力されたアルファベットに対応するキリル文字をreturnする
 function returnCorrespondentLetter(pressedCode: KeyboardEvent): string{
@@ -93,25 +94,12 @@ function returnCorrespondentLetter(pressedCode: KeyboardEvent): string{
     return letterInfo[0].keyRus
 }
 
-function pushedMotion(pressedKey: string, eventType: KeyEvent){
-    let keyboardClass: HTMLCollection = document.getElementsByClassName('key');
-    let indexOfRusKey: number = RusKeyArray.indexOf(pressedKey);
-    if(eventType === KeyEvent.KeyDown){
-        keyboardClass[indexOfRusKey].classList.add("pushed");
-    }
-    if(eventType === KeyEvent.KeyUp){
-        keyboardClass[indexOfRusKey].classList.remove("pushed");
-    }
-}
+// function setTargetKeys(){
+//     let indexOfNextKey: number = RusKeyArray.indexOf(game.GetTargetLetter());
+//     keyboardClass[indexOfNextKey].classList.add("next-key");
+// }
+// setTargetKeys();
 
-window.addEventListener('keydown', function(pressedCode) {
-    pushedMotion(returnCorrespondentLetter(pressedCode), KeyEvent.KeyDown);
-    game.ManageCount(pressedCode);
-})
-
-window.addEventListener('keyup', function(pressedCode) {
-    pushedMotion(returnCorrespondentLetter(pressedCode), KeyEvent.KeyUp);
-})
 
 // メモ
 // １キーボードの配列を取得✅ キリル文字の配列
@@ -119,9 +107,6 @@ window.addEventListener('keyup', function(pressedCode) {
 // ３key classを全て取得✅ class要素
 // ４押されたキリル文字がキーボード配列の何番目かを要素に格納
 // ５4で取得した番号をもとに何番目のkeyクラスを変更すればいいかを指定
-
-// key down ⇒ key up
-
 class Game {
     status: Status;
     time: number;
@@ -129,20 +114,28 @@ class Game {
     targetElement: HTMLDivElement;
     currentWordLocation: number;
     settedWord: string;
+    score: number;
+    keyboardClass: HTMLCollection;
+    indexOfNextKey: number;
 
     constructor(){
         this.targetElement = document.getElementById('target')! as HTMLDivElement;
         this.timelabel = document.getElementById('timer') as HTMLSpanElement;
         this.settedWord = "Click here to start";
-        this.targetElement.innerHTML =  this.settedWord;
+        this.targetElement.innerHTML = this.settedWord;
+        this.keyboardClass = document.getElementsByClassName('key')! as HTMLCollection;
+        this.indexOfNextKey = 0;
         this.time = 60;
         this.status = "NonActive";
         this.currentWordLocation = 0;
+        this.score = 0;
         this.targetElement.addEventListener('click', () => {
             if(this.status == "NonActive"){
                 this.status = "Active"
                 this.SetTarget();
                 this.UpdateTimer();
+                // ここで値を次のキーボードの値をセットする
+                this.GetTargetLetter();
             }
         }, { once: true })
         this.timelabel.innerHTML = `<span>${ this.time }</span>`;
@@ -169,6 +162,11 @@ class Game {
         console.log("次に打つキー；"+this.settedWord[this.currentWordLocation]);
     }
 
+    GetTargetLetter(){
+        this.indexOfNextKey = RusKeyArray.indexOf(this.settedWord[this.currentWordLocation]);
+        this.keyboardClass[this.indexOfNextKey].classList.add("next-key");
+    }
+
     ManageCount(pressedcode: KeyboardEvent){
         if(returnCorrespondentLetter(pressedcode) === this.settedWord[this.currentWordLocation]){
             console.log("正解です");
@@ -178,22 +176,56 @@ class Game {
         }
     }
 
-    AddCount(){
+    private AddCount(){
         this.currentWordLocation ++;
+        console.log("次に打つキー；"+this.settedWord[this.currentWordLocation]);
+        // this.indexOfNextKey = RusKeyArray.indexOf(this.settedWord[this.currentWordLocation + 1]);
+        // this.keyboardClass[this.indexOfNextKey].classList.add("next-key");
         this.DecorateCorrectWord();
         if(this.currentWordLocation === this.settedWord.length ){
             this.SetTarget();
+            console.log("scored!");
+            this.AddScore();
         }
     }
 
-    DecorateCorrectWord(){
+    private DecorateCorrectWord(){
         let decoratedWord = this.settedWord.slice(0, this.currentWordLocation)
         this.targetElement.innerHTML = `<span class="correct">${decoratedWord}</span>${this.settedWord.substring(this.currentWordLocation)}`;
     }
 
+    private AddScore(){
+        this.score ++;
+        console.log(this.score);
+    }
+
+}
+const game = new Game();
+
+// キーボードへ動きの付け加え
+
+function pushedMotion(pressedKey: string, eventType: KeyEvent){
+    let indexOfRusKey: number = RusKeyArray.indexOf(pressedKey);
+    game.indexOfNextKey = RusKeyArray.indexOf(game.settedWord[game.currentWordLocation]);
+    // game.keyboardClass[game.indexOfNextKey].classList.add("next-key");
+    if(eventType === KeyEvent.KeyDown){
+        game.keyboardClass[game.indexOfNextKey].classList.remove("next-key");
+        game.keyboardClass[indexOfRusKey].classList.add("pushed");
+    }
+    if(eventType === KeyEvent.KeyUp){
+        game.keyboardClass[indexOfRusKey].classList.remove("pushed");
+        game.keyboardClass[game.indexOfNextKey].classList.add("next-key");
+    }
 }
 
-const game = new Game();
+window.addEventListener('keydown', function(pressedCode) {
+    pushedMotion(returnCorrespondentLetter(pressedCode), KeyEvent.KeyDown);
+    game.ManageCount(pressedCode);
+})
+
+window.addEventListener('keyup', function(pressedCode) {
+    pushedMotion(returnCorrespondentLetter(pressedCode), KeyEvent.KeyUp);
+})
 
 
 // spaceキーを押したらゲームがスタートする
