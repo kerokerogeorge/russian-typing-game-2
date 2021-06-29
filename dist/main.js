@@ -86,17 +86,6 @@ function returnCorrespondentLetter(pressedCode) {
     var letterInfo = letters.filter(function (e) { return e.code == pressedCode.code; });
     return letterInfo[0].keyRus;
 }
-// function setTargetKeys(){
-//     let indexOfNextKey: number = RusKeyArray.indexOf(game.GetTargetLetter());
-//     keyboardClass[indexOfNextKey].classList.add("next-key");
-// }
-// setTargetKeys();
-// メモ
-// １キーボードの配列を取得✅ キリル文字の配列
-// ２押されたキリル文字取✅ キリル文字の一文字
-// ３key classを全て取得✅ class要素
-// ４押されたキリル文字がキーボード配列の何番目かを要素に格納
-// ５4で取得した番号をもとに何番目のkeyクラスを変更すればいいかを指定
 var Game = /** @class */ (function () {
     function Game() {
         var _this = this;
@@ -104,65 +93,48 @@ var Game = /** @class */ (function () {
         this.timelabel = document.getElementById('timer');
         this.settedWord = "Click here to start";
         this.targetElement.innerHTML = this.settedWord;
-        this.keyboardClass = document.getElementsByClassName('key');
-        this.indexOfNextKey = 0;
-        this.time = 60;
+        this.time = 10;
         this.status = "NonActive";
         this.currentWordLocation = 0;
         this.score = 0;
+        this.keyboardClass = document.getElementsByClassName('key');
+        this.indexOfNextKey = 0;
         this.targetElement.addEventListener('click', function () {
             if (_this.status == "NonActive") {
                 _this.status = "Active";
                 _this.SetTarget();
-                _this.UpdateTimer();
-                // ここで値を次のキーボードの値をセットする
+                UpdateGame();
                 _this.GetTargetLetter();
             }
-        }, { once: true });
+            else {
+                console.log("already active!!!!");
+                return;
+            }
+        });
         this.timelabel.innerHTML = "<span>" + this.time + "</span>";
         this.status = "NonActive";
     }
-    Game.prototype.UpdateTimer = function () {
-        var _this = this;
-        var timerId = setTimeout(function () {
-            _this.time--;
-            _this.timelabel.innerHTML = "<span>" + _this.time + "</span>";
-            if (_this.time <= 0) {
-                clearTimeout();
-                new Game();
-                return;
-            }
-            _this.UpdateTimer();
-        }, 1000);
-    };
     Game.prototype.SetTarget = function () {
         this.settedWord = words[Math.floor(Math.random() * Object.keys(words).length)][0];
         this.targetElement.innerHTML = this.settedWord;
         this.currentWordLocation = 0;
-        console.log("次に打つキー；" + this.settedWord[this.currentWordLocation]);
-    };
-    Game.prototype.GetTargetLetter = function () {
-        this.indexOfNextKey = RusKeyArray.indexOf(this.settedWord[this.currentWordLocation]);
-        this.keyboardClass[this.indexOfNextKey].classList.add("next-key");
     };
     Game.prototype.ManageCount = function (pressedcode) {
         if (returnCorrespondentLetter(pressedcode) === this.settedWord[this.currentWordLocation]) {
-            console.log("正解です");
+            // console.log("正解です");
             this.AddCount();
         }
         else {
-            console.log("間違えたキーを押しています");
+            // console.log("間違えたキーを押しています");
         }
     };
     Game.prototype.AddCount = function () {
+        console.log("in AddCount()：現在のキー：" + this.settedWord[this.currentWordLocation]);
         this.currentWordLocation++;
-        console.log("次に打つキー；" + this.settedWord[this.currentWordLocation]);
-        // this.indexOfNextKey = RusKeyArray.indexOf(this.settedWord[this.currentWordLocation + 1]);
-        // this.keyboardClass[this.indexOfNextKey].classList.add("next-key");
+        console.log("in AddCount()；次のキー；" + this.settedWord[this.currentWordLocation]);
         this.DecorateCorrectWord();
-        if (this.currentWordLocation === this.settedWord.length) {
+        if (this.currentWordLocation === this.settedWord.length && this.status == "Active") {
             this.SetTarget();
-            console.log("scored!");
             this.AddScore();
         }
     };
@@ -174,41 +146,53 @@ var Game = /** @class */ (function () {
         this.score++;
         console.log(this.score);
     };
+    Game.prototype.pushedMotion = function (pressedKey, eventType) {
+        var indexOfRusKey = RusKeyArray.indexOf(pressedKey);
+        this.indexOfNextKey = RusKeyArray.indexOf(this.settedWord[this.currentWordLocation]);
+        if (eventType === KeyEvent.KeyDown) {
+            if (this.status == "Active") {
+                this.keyboardClass[this.indexOfNextKey].removeAttribute("id");
+            }
+            this.keyboardClass[indexOfRusKey].classList.add("pushed");
+        }
+        if (eventType === KeyEvent.KeyUp) {
+            this.keyboardClass[indexOfRusKey].classList.remove("pushed");
+            if (this.status == "Active") {
+                this.keyboardClass[this.indexOfNextKey].setAttribute("id", "next-key");
+            }
+        }
+    };
+    // 対象のキーボードの色を変更する:最初
+    Game.prototype.GetTargetLetter = function () {
+        this.indexOfNextKey = RusKeyArray.indexOf(this.settedWord[this.currentWordLocation]);
+        this.keyboardClass[this.indexOfNextKey].setAttribute("id", "next-key");
+    };
     return Game;
 }());
 var game = new Game();
-// キーボードへ動きの付け加え
-function pushedMotion(pressedKey, eventType) {
-    var indexOfRusKey = RusKeyArray.indexOf(pressedKey);
-    game.indexOfNextKey = RusKeyArray.indexOf(game.settedWord[game.currentWordLocation]);
-    // game.keyboardClass[game.indexOfNextKey].classList.add("next-key");
-    if (eventType === KeyEvent.KeyDown) {
-        game.keyboardClass[game.indexOfNextKey].classList.remove("next-key");
-        game.keyboardClass[indexOfRusKey].classList.add("pushed");
-    }
-    if (eventType === KeyEvent.KeyUp) {
-        game.keyboardClass[indexOfRusKey].classList.remove("pushed");
-        game.keyboardClass[game.indexOfNextKey].classList.add("next-key");
-    }
-}
 window.addEventListener('keydown', function (pressedCode) {
-    pushedMotion(returnCorrespondentLetter(pressedCode), KeyEvent.KeyDown);
-    game.ManageCount(pressedCode);
+    game.pushedMotion(returnCorrespondentLetter(pressedCode), KeyEvent.KeyDown);
+    if (game.status == "Active") {
+        // console.log("game.status == Active");
+        game.ManageCount(pressedCode);
+    }
+    else {
+        console.log("game.status == NonActive");
+    }
 });
 window.addEventListener('keyup', function (pressedCode) {
-    pushedMotion(returnCorrespondentLetter(pressedCode), KeyEvent.KeyUp);
+    game.pushedMotion(returnCorrespondentLetter(pressedCode), KeyEvent.KeyUp);
 });
-// spaceキーを押したらゲームがスタートする
-// timeoutになったら終了
-// 「もう一度遊ぶ」を押したらまたプロジェクトが初期化されて新しいゲームが始まる
-// 初期化状態
-// 時間は６０秒にセット
-// press startをクリックされた瞬間に単語がランダムに表示される
-// press startをクリックした瞬間タイマーがスタートする
-// 単語を表示する
-// 入力した文字の色が変わる（ccss classの追加）
-// 次の単語が変わる
-// projectを最後まで遊んだ回数が１以上なら表示される文字を変更する
-// 非アクティブ の状態でクリックイベントが発生したらゲームがスタート
-// 状態がアクティブの状態でクリックイベントが発生してもゲームの初期化は行われない
-// タイマーを表示する際にシステムで数値変換をおこにい、加工した値を表示させる
+function UpdateGame() {
+    var timerId = setTimeout(function () {
+        game.time--;
+        game.timelabel.innerHTML = "<span>" + game.time + "</span>";
+        if (game.time <= 0) {
+            clearTimeout(game.time);
+            game.keyboardClass[game.indexOfNextKey].removeAttribute("id");
+            game = new Game();
+            return;
+        }
+        UpdateGame();
+    }, 1000);
+}

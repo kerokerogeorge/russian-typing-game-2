@@ -1,6 +1,6 @@
 enum KeyEvent { KeyDown, KeyUp }
-// type KeyEvent = "KeyDown" | "KeyUp"  enum を使うかunion型を使うか迷っている
 type Status = "Active" | "NonActive";
+
 
 const letters: { [key: string]: string }[] = [
     { code: 'KeyQ', keyRus: 'й' },
@@ -86,12 +86,20 @@ class Keylist {
 const keyList = new Keylist();
 let RusKeyArray: string[] = keyList.RuskeysToArray();
 let EngKeyArray: string[] = keyList.EngkeysToArray();
+// ーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーー
 
 // 入力されたアルファベットに対応するキリル文字をreturnする
 function returnCorrespondentLetter(pressedCode: KeyboardEvent): string{
     let letterInfo = letters.filter(e => e.code == pressedCode.code)
     return letterInfo[0].keyRus
 }
+
+// メモ
+// １キーボードの配列を取得✅ キリル文字の配列
+// ２押されたキリル文字取✅ キリル文字の一文字
+// ３key classを全て取得✅ class要素
+// ４押されたキリル文字がキーボード配列の何番目かを要素に格納
+// ５4で取得した番号をもとに何番目のkeyクラスを変更すればいいかを指定
 class Game {
     status: Status;
     time: number;
@@ -100,25 +108,31 @@ class Game {
     currentWordLocation: number;
     settedWord: string;
     score: number;
-    keyboardClass: HTMLCollection;
-    indexOfNextKey: number;
+
     constructor(){
         this.targetElement = document.getElementById('target')! as HTMLDivElement;
         this.timelabel = document.getElementById('timer') as HTMLSpanElement;
         this.settedWord = "Click here to start";
         this.targetElement.innerHTML = this.settedWord;
+        // ゲームが初期化されたらnext-keyクラスを完全に削除しないといけない
+        if(document.getElementById('next-key') != null){
+            let nextKeyClass = document.getElementById('next-key')!;
+            nextKeyClass.classList.remove("next-key");
+            console.log("よばれた！")
+        }
         this.time = 10;
         this.status = "NonActive";
         this.currentWordLocation = 0;
         this.score = 0;
-        this.keyboardClass = document.getElementsByClassName('key')! as HTMLCollection;
-        this.indexOfNextKey = 0;
         this.targetElement.addEventListener('click', () => {
+            // NonActiveの時だけに挙動を許して、ACTIVEのときにはなにもしない
             if(this.status == "NonActive"){
+                console.log("activated")
                 this.status = "Active"
                 this.SetTarget();
-                UpdateGame();
-                this.GetTargetLetter();
+                this.UpdateTimer();
+                // ここで値を次のキーボードの値をセットする
+                // GetTargetLetter();
             } else {
                 console.log("already active!!!!")
                 return
@@ -128,6 +142,19 @@ class Game {
         this.status = "NonActive";
     }
 
+    private UpdateTimer(){
+        let timerId = setTimeout(() =>{
+            this.time --;
+            this.timelabel.innerHTML = `<span>${ this.time }</span>`;
+            if (this.time <= 0) {
+                console.log("game ended --------------------------")
+                clearTimeout(this.time);
+                new Game();
+                return;
+            }
+            this.UpdateTimer();
+        }, 1000)
+    }
     private SetTarget(){
         this.settedWord = words[Math.floor(Math.random() * Object.keys(words).length)][0];
         this.targetElement.innerHTML = this.settedWord;
@@ -144,12 +171,14 @@ class Game {
     }
 
     private AddCount(){
-        console.log("in AddCount()：現在のキー：" + this.settedWord[this.currentWordLocation]);
         this.currentWordLocation ++;
-        console.log("in AddCount()；次のキー；" + this.settedWord[this.currentWordLocation]);
+        console.log("次に打つキー；"+this.settedWord[this.currentWordLocation]);
+        // this.indexOfNextKey = RusKeyArray.indexOf(this.settedWord[this.currentWordLocation + 1]);
+        // this.keyboardClass[this.indexOfNextKey].classList.add("next-key");
         this.DecorateCorrectWord();
         if(this.currentWordLocation === this.settedWord.length && this.status == "Active"){
             this.SetTarget();
+            console.log("scored!");
             this.AddScore();
         }
     }
@@ -164,55 +193,80 @@ class Game {
         console.log(this.score);
     }
 
-    pushedMotion(pressedKey: string, eventType: KeyEvent){
-        let indexOfRusKey: number = RusKeyArray.indexOf(pressedKey);
-        this.indexOfNextKey = RusKeyArray.indexOf(this.settedWord[this.currentWordLocation]);
-        if(eventType === KeyEvent.KeyDown){
-            if (this.status == "Active"){
-                this.keyboardClass[this.indexOfNextKey].removeAttribute("id");
-            }
-            this.keyboardClass[indexOfRusKey].classList.add("pushed");
-        }
-        if(eventType === KeyEvent.KeyUp){
-            this.keyboardClass[indexOfRusKey].classList.remove("pushed");
-            if (this.status == "Active"){
-                this.keyboardClass[this.indexOfNextKey].setAttribute("id","next-key");
-            }
-        }
-    }
+}
+const game = new Game();
 
-    // 対象のキーボードの色を変更する:最初
-    GetTargetLetter(){
-        this.indexOfNextKey = RusKeyArray.indexOf(this.settedWord[this.currentWordLocation]);
-        this.keyboardClass[this.indexOfNextKey].setAttribute("id","next-key");
+let keyboardClass = document.getElementsByClassName('key')! as HTMLCollection;
+// function GetTargetLetter(){
+//     keyboardClass[indexOfNextKey].classList.add("next-key");
+// }
+
+// キーボードへ動きの付け加え
+
+function pushedMotion(pressedKey: string, eventType: KeyEvent){
+    let indexOfRusKey: number = RusKeyArray.indexOf(pressedKey);
+    let indexOfNextKey = RusKeyArray.indexOf(game.settedWord[game.currentWordLocation]);
+    if(eventType === KeyEvent.KeyDown){
+        keyboardClass[indexOfNextKey].classList.remove("next-key");
+        keyboardClass[indexOfRusKey].classList.add("pushed");
+    }
+    if(eventType === KeyEvent.KeyUp){
+        keyboardClass[indexOfRusKey].classList.remove("pushed");
+        keyboardClass[indexOfNextKey].classList.add("next-key");
     }
 }
-let game = new Game();
 
 window.addEventListener('keydown', function(pressedCode) {
-    game.pushedMotion(returnCorrespondentLetter(pressedCode), KeyEvent.KeyDown);
+    pushedMotion(returnCorrespondentLetter(pressedCode), KeyEvent.KeyDown);
     if(game.status == "Active"){
-        // console.log("game.status == Active");
+        console.log("window.addEventListenerが呼ばれました");
         game.ManageCount(pressedCode);
-    }else{
-        console.log("game.status == NonActive");
     }
 })
 
 window.addEventListener('keyup', function(pressedCode) {
-    game.pushedMotion(returnCorrespondentLetter(pressedCode), KeyEvent.KeyUp);
+    pushedMotion(returnCorrespondentLetter(pressedCode), KeyEvent.KeyUp);
 })
 
-function UpdateGame(){
-    let timerId = setTimeout(() =>{
-        game.time --;
-        game.timelabel.innerHTML = `<span>${ game.time }</span>`;
-        if (game.time <= 0) {
-            clearTimeout(game.time);
-            game.keyboardClass[game.indexOfNextKey].removeAttribute("id");
-            game = new Game();
-            return;
-        }
-        UpdateGame();
-    }, 1000)
-}
+
+// spaceキーを押したらゲームがスタートする
+// timeoutになったら終了
+// 「もう一度遊ぶ」を押したらまたプロジェクトが初期化されて新しいゲームが始まる
+
+// 初期化状態
+// 時間は６０秒にセット
+// press startをクリックされた瞬間に単語がランダムに表示される
+// press startをクリックした瞬間タイマーがスタートする
+
+// 単語を表示する
+// 入力した文字の色が変わる（ccss classの追加）
+// 次の単語が変わる
+
+// projectを最後まで遊んだ回数が１以上なら表示される文字を変更する
+
+// 非アクティブ の状態でクリックイベントが発生したらゲームがスタート
+// 状態がアクティブの状態でクリックイベントが発生してもゲームの初期化は行われない
+
+// タイマーを表示する際にシステムで数値変換をおこにい、加工した値を表示させる
+
+
+// spaceキーを押したらゲームがスタートする
+// timeoutになったら終了
+// 「もう一度遊ぶ」を押したらまたプロジェクトが初期化されて新しいゲームが始まる
+
+// 初期化状態
+// 時間は６０秒にセット
+// press startをクリックされた瞬間に単語がランダムに表示される
+// press startをクリックした瞬間タイマーがスタートする
+
+// 単語を表示する
+// 入力した文字の色が変わる（ccss classの追加）
+// 次の単語が変わる
+
+// projectを最後まで遊んだ回数が１以上なら表示される文字を変更する
+
+// 非アクティブ の状態でクリックイベントが発生したらゲームがスタート
+// 状態がアクティブの状態でクリックイベントが発生してもゲームの初期化は行われない
+
+// タイマーを表示する際にシステムで数値変換をおこにい、加工した値を表示させる
+
