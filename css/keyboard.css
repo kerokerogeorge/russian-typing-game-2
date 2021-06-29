@@ -85,21 +85,6 @@
     transition: background 0.2s;
   }
 
-  /* .next-key{
-    float: left;
-    margin: 2px;
-    font-family: 'Source Code Pro', courier;
-    background: #F88374;
-    border-radius: 3px;
-    border-bottom: solid 4px #F5452E;
-    color: white;
-    cursor: default;
-    height: 6.3vmin;
-    width: 6.3vmin;
-    font-size: 2vmin;
-    transition: background 0.2s;
-  } */
-
   .north-west{
     font-size: 20px;
     margin-right: 24px;
